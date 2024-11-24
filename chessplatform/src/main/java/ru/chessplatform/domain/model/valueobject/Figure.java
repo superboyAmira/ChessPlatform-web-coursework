@@ -31,8 +31,6 @@ public class Figure {
         this.costPerPoints = costPerPoints;
     }
 
-    // TODO: переопределяем для сравнения стоимости фигур -> каждая фигура стоит определеное кол-во пешек
-
     @Override
     public String toString() {
         return name + " (" + costPerPoints + " points)";

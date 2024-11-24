@@ -22,8 +22,8 @@ public class Tournament extends BaseEntity {
     private String tournamentType;
     private double prizePool;
     private List<TournamentEntry> entries = new ArrayList<>();
+    private boolean closed;
 
-    // Конструкторы
     public Tournament() {}
 
     public Tournament(String name, LocalDateTime startDate, int participantCount, String tournamentType, double prizePool) {
@@ -32,9 +32,9 @@ public class Tournament extends BaseEntity {
         this.participantCount = participantCount;
         this.tournamentType = tournamentType;
         this.prizePool = prizePool;
+        this.closed = false;
     }
 
-    // Геттеры
     @Column(name = "name", nullable = false)
     public String getName() {
         return name;
@@ -63,6 +63,15 @@ public class Tournament extends BaseEntity {
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     public List<TournamentEntry> getEntries() {
         return entries;
+    }
+
+    @Column(name = "closed")
+    public boolean  getStatus() {
+        return this.closed;
+    }
+
+    public void setClosedStatus() {
+        this.closed = true;
     }
 
     public void setName(String name) {

@@ -1,9 +1,9 @@
 package ru.chessplatform.infrastructure.hibernate;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -13,30 +13,16 @@ import ru.chessplatform.domain.model.aggregate.TournamentEntry;
 import ru.chessplatform.domain.repository.TournamentRepository;
 
 @Repository
-public class TournamentRepositoryImpl implements TournamentRepository {
+public class TournamentRepositoryImpl extends GeneralRepository<Tournament> implements TournamentRepository {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Override
-    @Transactional
-    public void save(Tournament tournament) {
-        if (tournament.getId() == null || !entityManager.contains(tournament)) {
-            entityManager.persist(tournament);
-        } else {
-            entityManager.merge(tournament);
-        }
-    }
-
-    @Override
-    public Optional<Tournament> findById(UUID id) {
-        return Optional.ofNullable(entityManager.find(Tournament.class, id));
+    public TournamentRepositoryImpl() {
+        super(Tournament.class);
     }
 
     @Override
     public Optional<Tournament> findByPlayerId(UUID playerId) {
         try {
-            Tournament tournament = entityManager.createQuery(
+            Tournament tournament = this.getEntityManager().createQuery(
                     "SELECT t FROM Tournament t JOIN t.entries e WHERE e.player.id = :playerId", Tournament.class)
                     .setParameter("playerId", playerId)
                     .getSingleResult();
@@ -46,19 +32,23 @@ public class TournamentRepositoryImpl implements TournamentRepository {
         }
     }
 
-    // TODO: переписать под пактеную вставку
     @Override
     @Transactional
     public void updateTournamentEntries(Tournament tournament) {
-        Tournament managedTournament = entityManager.find(Tournament.class, tournament.getId());
+        Tournament managedTournament = this.getEntityManager().find(Tournament.class, tournament.getId());
         if (managedTournament != null) {
             managedTournament.getEntries().clear();
             for (TournamentEntry entry : tournament.getEntries()) {
                 managedTournament.getEntries().add(entry);
-                entityManager.merge(entry);
+                this.getEntityManager().merge(entry);
             }
         } else {
             throw new IllegalArgumentException("Tournament not found: " + tournament.getId());
         }
+    }
+
+    @Override
+    public List<Tournament> findAll(int limit, int offset) {
+        return this.getEntityManager().createQuery("SELECT t FROM Tournament t ORDER BY t.startDate DESC", Tournament.class).getResultList();
     }
 }
