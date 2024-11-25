@@ -21,4 +21,14 @@ public class GameRepositoryImpl extends GeneralRepository<Game> implements GameR
                 .setParameter("playerId", playerId)
                 .getResultList();
     }
+
+    @Override
+    public List<Game> findGMGames() {
+        return this.getEntityManager()
+                .createQuery("SELECT g FROM Game g " +
+                        "JOIN Player p ON p.id = g.player1 OR p.id = g.player2 " +
+                        "WHERE p.chessGrade = 'Гроссмейстер' " +
+                        "ORDER BY g.startTime DESC" +
+                        "LIMIT 5").getResultList();
+    }
 }

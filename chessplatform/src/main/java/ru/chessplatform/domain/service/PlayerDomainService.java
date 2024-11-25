@@ -2,6 +2,7 @@ package ru.chessplatform.domain.service;
 
 import java.util.List;
 
+import ru.chessplatform.application.dto.TopTournamentPlayer;
 import ru.chessplatform.domain.model.entity.Player;
 import ru.chessplatform.domain.repository.PlayerRepository;
 
@@ -13,10 +14,25 @@ public class PlayerDomainService {
     }
 
     public List<Player> getTopPlayersByRating(int limit) {
-        return playerRepository.findAll();
+        return playerRepository.findAll(0, 20)
+                .stream()
+                .sorted((p1, p2) -> Integer.compare(p2.getRating(), p1.getRating())) // Сортировка по рейтингу
+                .limit(limit) // Ограничиваем количество игроков
+                .toList();
     }
 
-    // public long getActivePlayerCount() {
-    //     // return playerRepository.countActivePlayers();
-    // }
+    public Long getActivePlayersCount() {
+        return playerRepository.getAmountOfPlayers();
+    }
+
+    public List<TopTournamentPlayer> getTopTournamentPlayers() {
+        return playerRepository.findTopTournamentPlayers(10)
+                .stream()
+                .map(record -> new TopTournamentPlayer(
+                        (String) record[0],
+                        (String) record[1],
+                        ((Number) record[2]).longValue()
+                ))
+                .toList();
+    }
 }

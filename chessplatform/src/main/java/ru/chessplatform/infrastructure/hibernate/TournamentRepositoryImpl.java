@@ -48,7 +48,20 @@ public class TournamentRepositoryImpl extends GeneralRepository<Tournament> impl
     }
 
     @Override
-    public List<Tournament> findAll(int limit, int offset) {
-        return this.getEntityManager().createQuery("SELECT t FROM Tournament t ORDER BY t.startDate DESC", Tournament.class).getResultList();
+    @Transactional
+    public List<Tournament> findSpecialTournament() {
+        String query = """
+        SELECT t FROM Tournament t
+        JOIN t.players p
+        WHERE p.chessGrade = :grandmasterGrade
+        GROUP BY t.id
+        ORDER BY COUNT(p.id) DESC, t.prize DESC, t.players.size DESC
+    """;
+
+        return this.getEntityManager().createQuery(query, Tournament.class)
+                .setParameter("grandmasterGrade", "Гроссмейстер")
+                .setMaxResults(6)
+                .getResultList();
     }
+
 }

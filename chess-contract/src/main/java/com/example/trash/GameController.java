@@ -1,7 +1,7 @@
 package com.example.trash;
 
 
-import com.example.trash.GameCreateInputModel;
+import com.example.input.GameCreateInputModel;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;

@@ -16,12 +16,8 @@ public class TournamentDomainService {
          return tournamentRepository.findAll(limit, 0);
     }
 
-    // public List<Tournament> getActiveTournaments() {
-    //     return tournamentRepository.findAll().stream()
-    //     .filter(tournament -> tournament != null)
-    //     .sorted((g1, g2) -> g2.getStartTime().compareTo(g1.getStartTime()))
-    //     .limit(limit)
-    //     .toList();
-    // }
+    public List<Tournament> getHotTournaments() {
+         return tournamentRepository.findSpecialTournament();
+    }
 }
 

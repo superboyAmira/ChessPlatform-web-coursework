@@ -1,14 +1,14 @@
-package com.example.trash;
+package com.example.viewmodel;
+
+import com.example.viewmodel.PlayerViewModel;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record GameViewModel(
         UUID id,
-        UUID player1Id,
-        String player1Name,
-        UUID player2Id,
-        String player2Name,
+        PlayerViewModel player1Id,
+        PlayerViewModel player2Id,
         String result, // "Победа", "Ничья", "Поражение"
         String gameType, // "Блиц", "Классика"
         LocalDateTime startTime,

@@ -12,7 +12,7 @@ public interface TournamentRepository {
     Optional<Tournament> findById(UUID id);
     Optional<Tournament> findByPlayerId(UUID playerId);
     void updateTournamentEntries(Tournament tournament);
-    List<Tournament> findAll();
     List<Tournament> findAll(int limit, int offset);
+    List<Tournament> findSpecialTournament();
     // как то придумать глобавльный метод для обновления турнирной таблицы через этот репозиторий агрегата
 }

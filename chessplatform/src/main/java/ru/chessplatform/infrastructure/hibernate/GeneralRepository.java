@@ -40,8 +40,11 @@ public abstract class GeneralRepository<E> {
         return Optional.ofNullable(entityManager.find(entityClass, id));
     }
 
-    public List<E> findAll() {
-        return entityManager.createQuery("FROM " + entityClass.getSimpleName(), entityClass).getResultList();
+    public List<E> findAll(int limit, int offset) {
+        return entityManager.createQuery("FROM " + entityClass.getSimpleName(), entityClass)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     // @Transactional

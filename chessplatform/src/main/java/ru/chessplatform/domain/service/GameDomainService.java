@@ -14,16 +14,15 @@ public class GameDomainService {
         this.gameRepository = gameRepository;
     }
 
-    public List<Game> getRecentCompletedGames(int limit) {
-        // Пример бизнес-логики: получение завершенных игр с сортировкой по дате
-        return gameRepository.findAll().stream()
-                .filter(game -> game.getResult() != null)
-                .sorted((g1, g2) -> g2.getStartTime().compareTo(g1.getStartTime()))
-                .limit(limit)
-                .toList();
+    public List<Game> getRecentCompletedGamesByGM() {
+        return gameRepository.findGMGames();
     }
 
     public List<Game> getGamesByPlayerId(UUID playerId) {
         return gameRepository.findByPlayerId(playerId);
+    }
+
+    public Long getTotalGamesPlayed() {
+        return gameRepository.getCountAllGames();
     }
 }

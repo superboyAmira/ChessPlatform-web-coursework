@@ -1,9 +1,6 @@
-package com.example.trash;
-
-import java.util.UUID;
+package com.example.viewmodel;
 
 public record PlayerViewModel(
-        UUID id,
         String name,
         int rating,
         String chessGrade

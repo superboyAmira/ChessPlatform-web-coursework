@@ -1,4 +1,4 @@
-package com.example.trash;
+package com.example.viewmodel;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -8,6 +8,5 @@ public record TournamentViewModel(
         LocalDateTime startDate,
         int participantCount,
         String tournamentType,
-        double prizePool,
-        boolean closed
+        double prizePool
 ) {}

@@ -1,7 +1,6 @@
 package com.example.trash;
 
-import com.example.trash.TournamentCreateInputModel;
-import com.example.trash.TournamentFilterInputModel;
+import com.example.input.TournamentCreateInputModel;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
