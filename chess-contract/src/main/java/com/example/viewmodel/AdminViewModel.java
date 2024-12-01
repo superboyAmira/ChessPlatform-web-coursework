@@ -1,10 +1,17 @@
 package com.example.viewmodel;
 
-import java.util.List;
-
 public class AdminViewModel {
-    List<TournamentsViewModel> tournaments;
-    List<PlayerViewModel> players;
-    List<PlayerViewModel> games;
+    private String username;
 
+    public AdminViewModel(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

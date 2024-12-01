@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${base.title}">Chess Platform - Home</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <h1 th:text="${base.title}">Main Page</h1>
+    <p th:text="'Logged in as: ' + ${base.currentUser}"></p>
+    <a href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+    <form id="logout-form" action="/logout" method="POST" style="display: none;">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+    </form>
+</header>
+
+<main>
+    <section>
+        <h2>Platform Statistics</h2>
+        <h3>Total Active Players: <span th:text="${activePlayersCount}">0</span></h3>
+        <h3> totalGamesPlayed: <span th:text="${totalGamesPlayed}">0</span></h3>
+    </section>
+
+    <section>
+        <h2>Upcoming Tournaments</h2>
+        <ul>
+            <li th:each="tournament : ${upcomingTournaments}">
+                <span th:text="${tournament.name}">Tournament Name</span> -
+                <span th:text="${tournament.startDate}">Date</span> -
+                <span th:text="${tournament.participantCount}">Participants</span>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Top Players</h2>
+        <ul>
+            <table>
+                <thead>
+                    <th>Name</th>
+                    <th>chessGrade</th>
+                    <th>Score</th>
+                </thead>
+            <tbody>
+                <tr th:each="player : ${topPlayers}">
+                        <td th:text="${player.name}">ID</td>
+                        <td th:text="${player.chessGrade}">Name</td>
+                        <td th:text="${player.successScore}">Start Date</td>
+                </tr>
+            </tbody>
+            </table>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Recent Grandmaster Games</h2>
+        <ul>
+            <li th:each="game : ${recentGrandmasterGames}">
+                <span th:text="${game.player1.name}">Player 1</span> vs
+                <span th:text="${game.player2.name}">Player 2</span> -
+                Result: <span th:text="${game.result}">Result</span>
+            </li>
+        </ul>
+    </section>
+</main>
+</body>
+</html>

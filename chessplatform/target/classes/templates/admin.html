@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${base.title}"></title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <h1 th:text="${base.title}">Admin Dashboard</h1>
+    <p>Welcome, <span th:text="${base.currentUser}"></span>!</p>
+</header>
+
+<nav>
+    <ul>
+        <a th:href="@{/admin/tournaments}">Tournaments</a>
+        <li><a th:href="@{/admin/games}">Manage Games</a></li>
+        <li><a th:href="@{/admin/players}">Manage Players</a></li>
+    </ul>
+</nav>
+</body>
+</html>

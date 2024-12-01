@@ -1,12 +1,7 @@
 package ru.chessplatform.application.service;
 
-import ru.chessplatform.application.dto.MainPageStatisticsDto;
-import ru.chessplatform.domain.service.GameDomainService;
-import ru.chessplatform.domain.service.PlayerDomainService;
-import ru.chessplatform.domain.service.TournamentDomainService;
-
 public class MainPageService {
-    private final PlayerDomainService playerDomainService;
+    /*private final PlayerDomainService playerDomainService;
     private final GameDomainService gameDomainService;
     private final TournamentDomainService tournamentDomainService;
 
@@ -27,5 +22,5 @@ public class MainPageService {
             gameDomainService.getRecentCompletedGames(5),
             tournamentDomainService.getActiveTournaments()
         );
-    }
+    }*/
 }

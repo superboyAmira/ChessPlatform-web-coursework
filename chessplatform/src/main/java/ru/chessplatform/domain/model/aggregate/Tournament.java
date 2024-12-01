@@ -98,6 +98,10 @@ public class Tournament extends BaseEntity {
         this.entries = entries;
     }
 
+    public void setStatus(boolean closed) {
+        this.closed = closed;
+    }
+
     // TODO: вероятно нужно проидывать не класс TournamentEntry а составные его части
     public void addEntry(TournamentEntry entry) {
         entries.add(entry);

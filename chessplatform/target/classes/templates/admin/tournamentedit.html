@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${base.title}">Edit Tournament</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+  <h1 th:text="${base.title}">Edit Tournament</h1>
+  <p th:text="'Logged in as: ' + ${base.currentUser}"></p>
+  <nav>
+    <a href="/admin/tournaments">Tournaments</a>
+    <a href="/admin/games">Games</a>
+    <a href="/admin/players">Players</a>
+    <a href="/admin/logout">Logout</a>
+  </nav>
+</header>
+
+<main>
+  <form th:action="@{'/admin/tournaments/edit/' + ${tournament.id}}" th:method="post" th:object="${tournament}">
+    <input type="hidden" id="id" name="id" th:field="*{id}">
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" th:field="*{name}" required>
+    </div>
+    <div>
+      <label for="startDate">Start Date:</label>
+      <input type="datetime-local" id="startDate" name="startDate" th:field="*{startDate}" required>
+    </div>
+    <div>
+      <label for="participantCount">Participant Count:</label>
+      <input type="number" id="participantCount" name="participantCount" th:field="*{participantCount}" required>
+    </div>
+    <div>
+      <label for="tournamentType">Tournament Type:</label>
+      <select id="tournamentType" name="tournamentType" th:field="*{tournamentType}">
+        <option value="BLITZ" th:selected="*{tournamentType == 'BLITZ'}">Blitz</option>
+        <option value="RAPID" th:selected="*{tournamentType == 'RAPID'}">Rapid</option>
+        <option value="BULLET" th:selected="*{tournamentType == 'BULLET'}">Bullet</option>
+      </select>
+    </div>
+    <div>
+      <label for="prizePool">Prize Pool:</label>
+      <input type="number" id="prizePool" name="prizePool" th:field="*{prizePool}" step="0.01" required>
+    </div>
+    <div>
+      <button type="submit">Save</button>
+      <a href="/admin/tournaments">Cancel</a>
+    </div>
+  </form>
+
+</main>
+</body>
+</html>

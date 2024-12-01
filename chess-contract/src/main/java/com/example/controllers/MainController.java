@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface MainController extends BaseController {
 
     @GetMapping
-    MainPageViewModel showHomePage(Model model);
+    String showHomePage(Model model);
 }
 
 

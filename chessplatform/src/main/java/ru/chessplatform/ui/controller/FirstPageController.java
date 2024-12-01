@@ -24,7 +24,7 @@ public class FirstPageController implements PageFirstController {
     }
 
 
-    @Override
+/*    @Override
     @GetMapping
     public CustomPage1ViewModel showFirstPage(Model model) {
         List<TournamentViewModel> topPrizeTournaments = tournamentDomainService.getUpcomingTournaments(0)
@@ -51,7 +51,7 @@ public class FirstPageController implements PageFirstController {
                 topPrizeTournaments,
                 topPlayers
         );
-    }
+    }*/
 
     @Override
     public BaseViewModel createBaseViewModel(String title) {

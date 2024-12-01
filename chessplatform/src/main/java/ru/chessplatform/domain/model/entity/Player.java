@@ -44,6 +44,17 @@ public class Player extends BaseEntity {
         return chessGrade;
     }
 
+    public Player() {}
+
+    public Player(String email, String name, int rating, int gamesWon, int gamesPlayed, String chessGrade) {
+        this.email = email;
+        this.name = name;
+        this.rating = rating;
+        this.gamesWon = gamesWon;
+        this.gamesPlayed = gamesPlayed;
+        this.chessGrade = chessGrade;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

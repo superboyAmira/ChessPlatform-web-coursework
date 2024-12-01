@@ -2,10 +2,12 @@ package ru.chessplatform.domain.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
 import ru.chessplatform.application.dto.TopTournamentPlayer;
 import ru.chessplatform.domain.model.entity.Player;
 import ru.chessplatform.domain.repository.PlayerRepository;
 
+@Service
 public class PlayerDomainService {
     private final PlayerRepository playerRepository;
 
@@ -29,9 +31,9 @@ public class PlayerDomainService {
         return playerRepository.findTopTournamentPlayers(10)
                 .stream()
                 .map(record -> new TopTournamentPlayer(
-                        (String) record[0],
-                        (String) record[1],
-                        ((Number) record[2]).longValue()
+                        (String) record[0],  // name
+                        (String) record[1],  // chessGrade
+                        ((Number) record[2]).longValue() // successScore
                 ))
                 .toList();
     }

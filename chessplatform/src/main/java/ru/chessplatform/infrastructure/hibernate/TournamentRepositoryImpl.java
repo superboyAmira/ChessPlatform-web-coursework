@@ -64,4 +64,14 @@ public class TournamentRepositoryImpl extends GeneralRepository<Tournament> impl
                 .getResultList();
     }
 
+    @Override
+    public Long getAmount() {
+        String query = """
+        SELECT COUNT(t) FROM Tournament t
+    """;
+        Object result = this.getEntityManager()
+                .createQuery(query)
+                .getSingleResult();
+        return ((Number) result).longValue();
+    }
 }

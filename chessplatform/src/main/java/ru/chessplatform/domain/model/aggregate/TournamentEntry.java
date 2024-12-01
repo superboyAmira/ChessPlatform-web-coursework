@@ -6,11 +6,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import ru.chessplatform.domain.model.entity.BaseEntity;
 import ru.chessplatform.domain.model.entity.Player;
 
 @Entity
 @Table(name = "tournament_entry")
-public class TournamentEntry {
+public class TournamentEntry extends BaseEntity {
     private Tournament tournament;
     private Player player;
     private int points;
@@ -19,6 +20,14 @@ public class TournamentEntry {
     public TournamentEntry() {}
 
     public TournamentEntry(Player player, int points, int gamesPlayed) {
+        this.player = player;
+        this.points = points;
+        this.gamesPlayed = gamesPlayed;
+    }
+
+
+    public TournamentEntry(Tournament tournament, Player player, int points, int gamesPlayed) {
+        this.tournament = tournament;
         this.player = player;
         this.points = points;
         this.gamesPlayed = gamesPlayed;

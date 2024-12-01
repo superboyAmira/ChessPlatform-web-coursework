@@ -1,26 +1,22 @@
 package ru.chessplatform.ui.controller;
 
-
 import com.example.controllers.MainController;
-import com.example.viewmodel.GameViewModel;
-import com.example.viewmodel.PlayerViewModel;
-import com.example.viewmodel.TournamentViewModel;
-import com.example.viewmodel.BaseViewModel;
-import com.example.viewmodel.MainPageViewModel;
+import com.example.viewmodel.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import ru.chessplatform.domain.service.GameDomainService;
 import ru.chessplatform.domain.service.PlayerDomainService;
 import ru.chessplatform.domain.service.TournamentDomainService;
 
 import java.util.List;
 
-@RequestMapping("/")
+@Controller
 public class MainPageController implements MainController {
-    GameDomainService gameService;
-    PlayerDomainService playerService;
-    TournamentDomainService tournamentService;
+    private final GameDomainService gameService;
+    private final PlayerDomainService playerService;
+    private final TournamentDomainService tournamentService;
 
     public MainPageController(GameDomainService gameService, PlayerDomainService playerService, TournamentDomainService tournamentService) {
         this.gameService = gameService;
@@ -28,11 +24,13 @@ public class MainPageController implements MainController {
         this.tournamentService = tournamentService;
     }
 
-    @GetMapping
     @Override
-    public MainPageViewModel showHomePage(Model model) {
-        long activePlayersCount = playerService.getActivePlayersCount();
+    public String showHomePage(Model model) {
+        BaseViewModel base = createBaseViewModel("Main Page");
 
+        // Добавляем объект base в модель
+        model.addAttribute("base", base);
+        long activePlayersCount = playerService.getActivePlayersCount();
         long totalGamesPlayed = gameService.getTotalGamesPlayed();
 
         List<TournamentViewModel> upcomingTournaments = tournamentService.getUpcomingTournaments(0)
@@ -43,16 +41,18 @@ public class MainPageController implements MainController {
                         tournament.getStartDate(),
                         tournament.getParticipantCount(),
                         tournament.getTournamentType(),
-                        tournament.getPrizePool()
+                        tournament.getPrizePool(),
+                        tournament.getStatus(),
+                        null
                 ))
                 .toList();
 
-        List<PlayerViewModel> topPlayers = playerService.getTopPlayersByRating(5)
+        List<TopTournamentPlayerViewModel> topPlayers = playerService.getTopTournamentPlayers()
                 .stream()
-                .map(player -> new PlayerViewModel(
+                .map(player -> new TopTournamentPlayerViewModel(
                         player.getName(),
-                        player.getRating(),
-                        player.getChessGrade()
+                        player.getChessGrade(),
+                        player.getSuccessScore()
                 ))
                 .toList();
 
@@ -69,26 +69,22 @@ public class MainPageController implements MainController {
                 ))
                 .toList();
 
-        BaseViewModel base = new BaseViewModel(
-                "Main Page",
-                "currentUserName"
-        );
+        model.addAttribute("activePlayersCount", activePlayersCount);
+        model.addAttribute("totalGamesPlayed", totalGamesPlayed);
+        model.addAttribute("upcomingTournaments", upcomingTournaments);
+        model.addAttribute("topPlayers", topPlayers);
+        model.addAttribute("recentGrandmasterGames", recentGrandmasterGames);
 
-        return new MainPageViewModel(
-                base,
-                activePlayersCount,
-                totalGamesPlayed,
-                upcomingTournaments,
-                topPlayers,
-                recentGrandmasterGames
-        );
+        return "index";
     }
 
     @Override
     public BaseViewModel createBaseViewModel(String title) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
         return new BaseViewModel(
                 title,
-                ""
+                currentUser
         );
     }
 }

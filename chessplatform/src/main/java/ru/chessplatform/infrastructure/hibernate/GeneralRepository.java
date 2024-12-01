@@ -29,22 +29,30 @@ public abstract class GeneralRepository<E> {
 
     @Transactional
     public void save(E entity) {
-        if (entity instanceof BaseEntity && findById(((BaseEntity) entity).getId()).isPresent()) {
-            entityManager.merge(entity);
+        if (entity instanceof BaseEntity) {
+            BaseEntity baseEntity = (BaseEntity) entity;
+            if (baseEntity.getId() != null && findById(baseEntity.getId()).isPresent()) {
+                entityManager.merge(entity); // Если ID существует и сущность найдена
+            } else {
+                entityManager.persist(entity); // Если ID отсутствует или сущность новая
+            }
         } else {
-            entityManager.persist(entity);
+            throw new IllegalArgumentException("Entity must extend BaseEntity");
         }
     }
+
 
     public Optional<E> findById(UUID id) {
         return Optional.ofNullable(entityManager.find(entityClass, id));
     }
 
     public List<E> findAll(int limit, int offset) {
-        return entityManager.createQuery("FROM " + entityClass.getSimpleName(), entityClass)
+        String query = "FROM " + entityClass.getSimpleName() + " ORDER BY id";
+        List <E> res = entityManager.createQuery(query, entityClass)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();
+        return res;
     }
 
     // @Transactional

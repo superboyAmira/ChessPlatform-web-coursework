@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public record GameViewModel(
         UUID id,
-        PlayerViewModel player1Id,
-        PlayerViewModel player2Id,
+        PlayerViewModel player1,
+        PlayerViewModel player2,
         String result, // "Победа", "Ничья", "Поражение"
         String gameType, // "Блиц", "Классика"
         LocalDateTime startTime,
