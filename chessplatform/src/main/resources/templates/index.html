@@ -9,10 +9,14 @@
 <header>
     <h1 th:text="${base.title}">Main Page</h1>
     <p th:text="'Logged in as: ' + ${base.currentUser}"></p>
-    <a href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-    <form id="logout-form" action="/logout" method="POST" style="display: none;">
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-    </form>
+    <p>
+        Welcome, <span th:text="${username}"></span>!
+        <a th:href="@{/profile}" class="btn-profile">Profile</a>
+        <a href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+        <form id="logout-form" action="/logout" method="POST" style="display: none;">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+        </form>
+    </p>
 </header>
 
 <main>

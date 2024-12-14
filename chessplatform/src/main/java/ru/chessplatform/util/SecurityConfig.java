@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new InMemoryUserDetailsManager(
                 User.builder()
                         .username("admin")
-                        .password("{noop}admin") // Пароль без шифрования, для простоты
+                        .password("{noop}admin")
                         .roles("ADMIN")
                         .build(),
                 User.builder()

@@ -1,7 +1,7 @@
 package com.example.trash;
 
 
-import com.example.input.GameCreateInputModel;
+import com.example.input.GameInputModel;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +28,7 @@ public interface GameController {
      */
     @PostMapping("/create")
     String createGame(
-            @ModelAttribute("game") @Valid GameCreateInputModel game,
+            @ModelAttribute("game") @Valid GameInputModel game,
             BindingResult bindingResult,
             Model model
     );

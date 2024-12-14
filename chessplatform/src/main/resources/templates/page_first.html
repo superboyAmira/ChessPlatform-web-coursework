@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Top Tournaments and Players</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <h1>Chess Platform</h1>
+</header>
+
+<section>
+    <h2>Top Prize Tournaments</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>Participants</th>
+            <th>Type</th>
+            <th>Prize Pool</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tournament : ${topPrizeTournaments}">
+            <td th:text="${tournament.name}"></td>
+            <td th:text="${#dates.format(tournament.startDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${tournament.participantCount}"></td>
+            <td th:text="${tournament.tournamentType}"></td>
+            <td th:text="${tournament.prizePool} + ' €'"></td>
+            <td th:text="${tournament.closed ? 'Closed' : 'Open'}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<section>
+    <h2>Top Tournament Players</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Player Name</th>
+            <th>Chess Grade</th>
+            <th>Success Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="player : ${topPlayers}">
+            <td th:text="${player.name}"></td>
+            <td th:text="${player.chessGrade}"></td>
+            <td th:text="${player.successScore}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<footer>
+    <p>&copy; 2024 Chess Platform</p>
+</footer>
+</body>
+</html>
