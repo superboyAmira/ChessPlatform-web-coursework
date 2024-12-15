@@ -7,5 +7,4 @@ import ru.chessplatform.domain.model.entity.Move;
 
 public interface MoveRepository {
     void save(Move move);
-    List<Move> findAllByGame(UUID gameId);
 }

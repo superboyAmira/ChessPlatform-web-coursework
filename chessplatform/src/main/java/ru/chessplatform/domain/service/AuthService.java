@@ -24,7 +24,7 @@ public class AuthService {
         Player player = new Player();
         player.setName(name);
         player.setEmail(email);
-        player.setPassword("{noop}" + password); // Указываем {noop}, чтобы пароли не хешировались
+        player.setPassword("{noop}" + password);
         player.setRole(role);
         player.setChessGrade(chessGrade);
         playerRepository.save(player);

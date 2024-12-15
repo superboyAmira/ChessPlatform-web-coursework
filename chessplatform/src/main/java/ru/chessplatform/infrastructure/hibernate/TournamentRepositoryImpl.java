@@ -20,34 +20,6 @@ public class TournamentRepositoryImpl extends GeneralRepository<Tournament> impl
     }
 
     @Override
-    public Optional<Tournament> findByPlayerId(UUID playerId) {
-        try {
-            Tournament tournament = this.getEntityManager().createQuery(
-                    "SELECT t FROM Tournament t JOIN t.entries e WHERE e.player.id = :playerId", Tournament.class)
-                    .setParameter("playerId", playerId)
-                    .getSingleResult();
-            return Optional.of(tournament);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    @Transactional
-    public void updateTournamentEntries(Tournament tournament) {
-        Tournament managedTournament = this.getEntityManager().find(Tournament.class, tournament.getId());
-        if (managedTournament != null) {
-            managedTournament.getEntries().clear();
-            for (TournamentEntry entry : tournament.getEntries()) {
-                managedTournament.getEntries().add(entry);
-                this.getEntityManager().merge(entry);
-            }
-        } else {
-            throw new IllegalArgumentException("Tournament not found: " + tournament.getId());
-        }
-    }
-
-    @Override
     @Transactional
     public List<Tournament> findSpecialTournament() {
         String query = """

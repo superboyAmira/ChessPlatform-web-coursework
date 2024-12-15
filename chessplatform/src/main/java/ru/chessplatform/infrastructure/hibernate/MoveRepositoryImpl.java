@@ -13,12 +13,4 @@ public class MoveRepositoryImpl extends GeneralRepository<Move> implements MoveR
     public MoveRepositoryImpl() {
         super(Move.class);
     }
-
-    @Override
-    public List<Move> findAllByGame(UUID gameId) {
-        return this.getEntityManager().createQuery(
-                "SELECT m FROM Move m WHERE m.game.id = :gameId", Move.class)
-                .setParameter("gameId", gameId)
-                .getResultList();
-    }
 }
