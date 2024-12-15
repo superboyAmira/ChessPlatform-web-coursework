@@ -4,6 +4,7 @@ import java.util.List;
 
 public record BaseViewModel(
         String title,
-        String currentUser
+        String currentUser,
+        String currentUserRole
 ) {}
 

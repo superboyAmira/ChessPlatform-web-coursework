@@ -1,14 +1,22 @@
 package ru.chessplatform.application.dto;
 
+import java.util.UUID;
+
 public class TopTournamentPlayer {
+    private final UUID id;
     private final String name;
     private final String chessGrade;
-    private final long successScore;
+    private final int successScore;
 
-    public TopTournamentPlayer(String name, String chessGrade, long successScore) {
+    public TopTournamentPlayer(UUID id, String name, String chessGrade, int successScore) {
+        this.id = id;
         this.name = name;
         this.chessGrade = chessGrade;
         this.successScore = successScore;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public String getName() {
@@ -19,7 +27,7 @@ public class TopTournamentPlayer {
         return chessGrade;
     }
 
-    public long getSuccessScore() {
+    public int getSuccessScore() {
         return successScore;
     }
 }

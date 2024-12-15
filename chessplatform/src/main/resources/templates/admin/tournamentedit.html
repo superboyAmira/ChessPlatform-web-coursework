@@ -10,15 +10,14 @@
   <h1 th:text="${base.title}">Edit Tournament</h1>
   <p th:text="'Logged in as: ' + ${base.currentUser}"></p>
   <nav>
-    <a href="/admin/tournaments">Tournaments</a>
-    <a href="/admin/games">Games</a>
-    <a href="/admin/players">Players</a>
-    <a href="/admin/logout">Logout</a>
+    <a th:href="@{/tournaments}">Tournaments</a>
+    <a th::href="@{/players}">Players</a>
+    <a th::href="@{/logout}">Logout</a>
   </nav>
 </header>
 
 <main>
-  <form th:action="@{'/admin/tournaments/edit/' + ${tournament.id}}" th:method="post" th:object="${tournament}">
+  <form th:action="@{'/tournaments/admin/edit/' + ${tournament.id}}" th:method="post" th:object="${tournament}">
     <input type="hidden" id="id" name="id" th:field="*{id}">
     <div>
       <label for="name">Name:</label>
@@ -46,7 +45,7 @@
     </div>
     <div>
       <button type="submit">Save</button>
-      <a href="/admin/tournaments">Cancel</a>
+      <a th:href="@{/tournaments}">Cancel</a>
     </div>
   </form>
 

@@ -1,16 +1,22 @@
 package ru.chessplatform.ui.controller;
 
 import com.example.controllers.MainController;
+import com.example.input.PlayerInputModel;
 import com.example.viewmodel.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import ru.chessplatform.domain.model.entity.Player;
 import ru.chessplatform.domain.service.GameDomainService;
 import ru.chessplatform.domain.service.PlayerDomainService;
 import ru.chessplatform.domain.service.TournamentDomainService;
+import ru.chessplatform.domain.service.mapper.TournamentMapper;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 public class MainPageController implements MainController {
@@ -33,35 +39,34 @@ public class MainPageController implements MainController {
         long activePlayersCount = playerService.getActivePlayersCount();
         long totalGamesPlayed = gameService.getTotalGamesPlayed();
 
-        List<TournamentViewModel> upcomingTournaments = tournamentService.getUpcomingTournaments(0)
+        Optional<Player> id = playerService.getPlayerByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (id.isEmpty()) {
+            model.addAttribute("userId", "null");
+        } else {
+            model.addAttribute("userId", id.get().getId());
+        }
+
+
+        List<TournamentViewModel> upcomingTournaments = tournamentService.getUpcomingTournaments()
                 .stream()
-                .map(tournament -> new TournamentViewModel(
-                        tournament.getId(),
-                        tournament.getName(),
-                        tournament.getStartDate(),
-                        tournament.getParticipantCount(),
-                        tournament.getTournamentType(),
-                        tournament.getPrizePool(),
-                        tournament.getStatus(),
-                        null
-                ))
+                .map(tournament -> TournamentMapper.toViewModel(tournament))
                 .toList();
 
-        List<TopTournamentPlayerViewModel> topPlayers = playerService.getTopTournamentPlayers()
+        List<PlayerViewModel> topPlayers = playerService.getTopPlayersByRating()
                 .stream()
-                .map(player -> new TopTournamentPlayerViewModel(
+                .map(player -> new PlayerViewModel(
+                        player.getId(),
                         player.getName(),
-                        player.getChessGrade(),
-                        player.getSuccessScore()
-                ))
-                .toList();
+                        player.getRating(),
+                        player.getChessGrade()
+                )).toList();
 
         List<GameViewModel> recentGrandmasterGames = gameService.getRecentCompletedGamesByGM()
                 .stream()
                 .map(game -> new GameViewModel(
                         game.getId(),
-                        new PlayerViewModel(game.getPlayer1().getName(), game.getPlayer1().getRating(), game.getPlayer1().getChessGrade()),
-                        new PlayerViewModel(game.getPlayer2().getName(), game.getPlayer2().getRating(), game.getPlayer2().getChessGrade()),
+                        new PlayerViewModel(game.getPlayer1().getId(), game.getPlayer1().getName(), game.getPlayer1().getRating(), game.getPlayer1().getChessGrade()),
+                        new PlayerViewModel(game.getPlayer2().getId(), game.getPlayer2().getName(), game.getPlayer2().getRating(), game.getPlayer2().getChessGrade()),
                         game.getResult(),
                         game.getGameType(),
                         game.getStartTime(),
@@ -80,11 +85,13 @@ public class MainPageController implements MainController {
 
     @Override
     public BaseViewModel createBaseViewModel(String title) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUser = authentication.getName();
-        return new BaseViewModel(
-                title,
-                currentUser
-        );
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        String currentUserRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("UNKNOWN");
+
+        return new BaseViewModel(title, currentUsername, currentUserRole);
     }
 }

@@ -2,6 +2,7 @@ package ru.chessplatform.ui.controller;
 
 import com.example.controllers.PageFirstController;
 import com.example.viewmodel.*;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +26,7 @@ public class FirstPageController implements PageFirstController {
     @Override
     @GetMapping
     public String showFirstPage(Model model) {
-        List<TournamentViewModel> topPrizeTournaments = tournamentDomainService.getUpcomingTournaments(0)
+        List<TournamentViewModel> topPrizeTournaments = tournamentDomainService.getHotTournaments()
                 .stream()
                 .map(tournament -> new TournamentViewModel(
                         tournament.getId(),
@@ -47,6 +48,7 @@ public class FirstPageController implements PageFirstController {
         List<TopTournamentPlayerViewModel> topPlayers = this.playerDomainService.getTopTournamentPlayers()
                 .stream()
                 .map(player -> new TopTournamentPlayerViewModel(
+                        player.getId(),
                         player.getChessGrade(),
                         player.getName(),
                         player.getSuccessScore()
@@ -64,7 +66,13 @@ public class FirstPageController implements PageFirstController {
 
     @Override
     public BaseViewModel createBaseViewModel(String title) {
-        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        return new BaseViewModel(title, currentUser);
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        String currentUserRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("UNKNOWN");
+
+        return new BaseViewModel(title, currentUsername, currentUserRole);
     }
 }

@@ -15,14 +15,14 @@ public class ProfileController {
     public String showProfile(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName(); // Имя пользователя
+        String details = authentication.getDetails().toString();
         model.addAttribute("username", username);
 
-        // Здесь можно добавить больше данных пользователя
         model.addAttribute("role", authentication.getAuthorities().stream()
                 .map(Object::toString)
                 .findFirst()
-                .orElse("USER")); // Роль пользователя (если есть)
+                .orElse("NO_ROLE"));
 
-        return "profile";
+        return "player/profile";
     }
 }

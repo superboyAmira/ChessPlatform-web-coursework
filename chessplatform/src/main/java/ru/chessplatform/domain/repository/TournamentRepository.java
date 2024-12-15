@@ -15,5 +15,6 @@ public interface TournamentRepository {
     List<Tournament> findAll(int limit, int offset);
     List<Tournament> findSpecialTournament();
     Long getAmount();
+    List <Tournament> findUpcomingTourmnametns();
     // как то придумать глобавльный метод для обновления турнирной таблицы через этот репозиторий агрегата
 }

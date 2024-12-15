@@ -1,10 +1,25 @@
 package ru.chessplatform.domain.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import ru.chessplatform.application.dto.TopTournamentPlayer;
+import ru.chessplatform.domain.model.valueobject.RoleEnum;
+
+import javax.persistence.*;
+import java.util.UUID;
+
 
 @Entity
+@SqlResultSetMapping(
+        name = "TopTournamentPlayerMapping",
+        classes = @ConstructorResult(
+                targetClass = TopTournamentPlayer.class,
+                columns = {
+                        @ColumnResult(name = "id", type = UUID.class),
+                        @ColumnResult(name = "name", type = String.class),
+                        @ColumnResult(name = "chess_grade", type = String.class),
+                        @ColumnResult(name = "successScore", type = Integer.class)
+                }
+        )
+)
 @Table(name = "player")
 public class Player extends BaseEntity {
     private String name;
@@ -13,6 +28,8 @@ public class Player extends BaseEntity {
     private int gamesPlayed;
     private int gamesWon;
     private String chessGrade; // Гроссмейстер/1 юношеский разряд
+    private String password;
+    private RoleEnum role;
 
     @Column(name = "name", nullable = false)
     public String getName() {
@@ -44,15 +61,56 @@ public class Player extends BaseEntity {
         return chessGrade;
     }
 
+    @Column(name = "password", nullable = false)
+    public String getPassword() {
+        return password;
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    public RoleEnum getRole() {
+        return role;
+    }
+
     public Player() {}
 
-    public Player(String email, String name, int rating, int gamesWon, int gamesPlayed, String chessGrade) {
-        this.email = email;
+    public Player(String name, String email, String password, RoleEnum role, String chessGrade) {
         this.name = name;
-        this.rating = rating;
-        this.gamesWon = gamesWon;
-        this.gamesPlayed = gamesPlayed;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.gamesPlayed = 0;
+        this.gamesWon = 0;
+        this.rating = 1;
         this.chessGrade = chessGrade;
+    }
+
+    public Player(String name, String email, int rating, int gamesPlayed, int gamesWon, String chessGrade) {
+        this.name = name;
+        this.email = email;
+        this.rating = rating;
+        this.gamesPlayed = gamesPlayed;
+        this.gamesWon = gamesWon;
+        this.chessGrade = chessGrade;
+    }
+
+    public Player(String name, String email, int rating, int gamesPlayed, int gamesWon, String chessGrade, String password, RoleEnum role) {
+        this.name = name;
+        this.email = email;
+        this.rating = rating;
+        this.gamesPlayed = gamesPlayed;
+        this.gamesWon = gamesWon;
+        this.chessGrade = chessGrade;
+        this.password = password;
+        this.role = role;
+    }
+
+    public void setRole(RoleEnum role) {
+        this.role = role;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setName(String name) {

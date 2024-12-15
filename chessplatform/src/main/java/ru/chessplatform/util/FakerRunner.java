@@ -10,6 +10,7 @@ import ru.chessplatform.domain.model.entity.Game;
 import ru.chessplatform.domain.model.entity.Move;
 import ru.chessplatform.domain.model.entity.Player;
 import ru.chessplatform.domain.model.valueobject.Figure;
+import ru.chessplatform.domain.model.valueobject.RoleEnum;
 import ru.chessplatform.domain.repository.*;
 
 import java.time.LocalDateTime;
@@ -44,25 +45,53 @@ public class FakerRunner {
                 tournaments.add(tournament);
                 tournamentRepository.save(tournament);
             });
+            List<Player> players = new ArrayList<>();
+            // Создаем администратора
+            /*Player admin = new Player(
+                    "admin",
+                    "admin@example.com",
+                    0,
+                    0,
+                    0,
+                    "Гроссмейстер",
+                    "admin",
+                    RoleEnum.ADMIN
+            );
+            players.add(admin);
+            playerRepository.save(admin);
 
-            List <Player> players = new ArrayList<>();
-            // Генерация игроков
-            IntStream.range(0, 20)
-                    .forEach(i -> {
-                        Player player = new Player(
-                                faker.name().fullName(),
-                                faker.internet().emailAddress(),
-                                faker.number().numberBetween(1000, 2800),
-                                faker.number().numberBetween(0, 500),
-                                faker.number().numberBetween(0, 300),
-                                faker.options().option("Гроссмейстер", "Мастер", "1 разряд")
-                        );
-                        players.add(player);
-                        playerRepository.save(player);
-                    });
+            // Создаем пользователя
+            Player user = new Player(
+                    "user",
+                    "user@example.com",
+                    0,
+                    0,
+                    0,
+                    "3 разряд",
+                    "user",
+                    RoleEnum.PLAYER
+            );
+            players.add(user);
+            playerRepository.save(user);*/
+
+            // Генерация случайных игроков
+            IntStream.range(0, 18).forEach(i -> {
+                Player randomPlayer = new Player(
+                        faker.name().fullName(),
+                        faker.internet().emailAddress(),
+                        faker.number().numberBetween(1000, 2800), // Рейтинг
+                        faker.number().numberBetween(0, 300), // Игры
+                        faker.number().numberBetween(0, 500), // Количество побед
+                        faker.options().option("Гроссмейстер", "Мастер", "1 разряд", "2 разряд", "3 разряд"),
+                        faker.internet().password(),
+                        RoleEnum.PLAYER
+                );
+                players.add(randomPlayer);
+                playerRepository.save(randomPlayer);
+            });
 
             // Генерация фигур
-            String[] figureTypes = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
+            String[] figureTypes = {"PAWN", "KNIGHT", "BISHOP", "ROOK", "QUEEN", "KING"};
 
             // Генерация записей в турниры
             tournaments.forEach(tournament -> {

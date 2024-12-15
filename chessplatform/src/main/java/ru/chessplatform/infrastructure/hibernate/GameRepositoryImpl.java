@@ -15,12 +15,15 @@ public class GameRepositoryImpl extends GeneralRepository<Game> implements GameR
     }
 
     @Override
-    public List<Game> findByPlayerId(UUID playerId) {
+    public List<Game> findByPlayerId(UUID playerId, int size, int page) {
         return this.getEntityManager().createQuery(
-                "SELECT g FROM Game g WHERE g.player1.id = :playerId OR g.player2.id = :playerId", Game.class)
+                        "SELECT g FROM Game g WHERE g.player1.id = :playerId OR g.player2.id = :playerId", Game.class)
                 .setParameter("playerId", playerId)
+                .setFirstResult(page * size)
+                .setMaxResults(size)
                 .getResultList();
     }
+
 
     @Override
     public List<Game> findGMGames() {
@@ -41,6 +44,17 @@ public class GameRepositoryImpl extends GeneralRepository<Game> implements GameR
                 """;
         Object result = this.getEntityManager()
                 .createNativeQuery(query)
+                .getSingleResult();
+        return ((Number) result).longValue();
+    }
+
+    @Override
+    public Long getAmount() {
+        String query = """
+        SELECT COUNT(g) FROM Game g
+    """;
+        Object result = this.getEntityManager()
+                .createQuery(query)
                 .getSingleResult();
         return ((Number) result).longValue();
     }

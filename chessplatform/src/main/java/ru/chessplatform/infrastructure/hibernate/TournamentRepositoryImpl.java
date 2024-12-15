@@ -52,10 +52,11 @@ public class TournamentRepositoryImpl extends GeneralRepository<Tournament> impl
     public List<Tournament> findSpecialTournament() {
         String query = """
         SELECT t FROM Tournament t
-        JOIN t.players p
+        JOIN t.entries e
+        JOIN e.player p
         WHERE p.chessGrade = :grandmasterGrade
         GROUP BY t.id
-        ORDER BY COUNT(p.id) DESC, t.prize DESC, t.players.size DESC
+        ORDER BY COUNT(e.id) DESC, t.prizePool DESC, SIZE(t.entries) DESC
     """;
 
         return this.getEntityManager().createQuery(query, Tournament.class)
@@ -73,5 +74,16 @@ public class TournamentRepositoryImpl extends GeneralRepository<Tournament> impl
                 .createQuery(query)
                 .getSingleResult();
         return ((Number) result).longValue();
+    }
+
+    public List<Tournament> findUpcomingTourmnametns() {
+        String query = """
+            SELECT t FROM Tournament t
+            ORDER BY startDate
+        """;
+
+        return this.getEntityManager().createQuery(query, Tournament.class)
+                    .setMaxResults(10)
+                    .getResultList();
     }
 }

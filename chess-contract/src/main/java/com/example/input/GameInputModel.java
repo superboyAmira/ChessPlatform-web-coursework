@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class GameInputModel {
+    private UUID id;
 
     @NotNull(message = "Игрок 1 обязателен")
     private UUID player1Id;
@@ -12,17 +13,36 @@ public class GameInputModel {
     @NotNull(message = "Игрок 2 обязателен")
     private UUID player2Id;
 
+    private String result;
+
     @NotBlank(message = "Тип игры обязателен")
     private String gameType; // Блиц, Рапид, Пуля
 
     @NotNull(message = "Время начала обязательно")
     private LocalDateTime startTime;
 
-    public GameInputModel(UUID player1Id, UUID player2Id, String gameType, LocalDateTime startTime) {
+    @Min(value = 1, message = "Duration must be non-negative")
+    private long duration;
+
+    public GameInputModel() {
+    }
+
+    public GameInputModel(UUID id, UUID player1Id, long duration, LocalDateTime startTime, String gameType, String result, UUID player2Id) {
+        this.id = id;
         this.player1Id = player1Id;
-        this.player2Id = player2Id;
-        this.gameType = gameType;
+        this.duration = duration;
         this.startTime = startTime;
+        this.gameType = gameType;
+        this.result = result;
+        this.player2Id = player2Id;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public UUID getPlayer1Id() {
@@ -55,5 +75,21 @@ public class GameInputModel {
 
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 }

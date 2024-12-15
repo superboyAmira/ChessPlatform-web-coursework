@@ -2,9 +2,11 @@ package ru.chessplatform.domain.service;
 
 import org.springframework.stereotype.Service;
 import ru.chessplatform.domain.model.aggregate.Tournament;
+import ru.chessplatform.domain.model.aggregate.TournamentEntry;
 import ru.chessplatform.domain.repository.TournamentRepository;
 import ru.chessplatform.infrastructure.hibernate.TournamentRepositoryImpl;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,8 +19,8 @@ public class TournamentDomainService {
         this.tournamentRepository = tournamentRepository;
     }
 
-    public List<Tournament> getUpcomingTournaments(int limit) {
-         return tournamentRepository.findAll(limit, 0);
+    public List<Tournament> getUpcomingTournaments() {
+         return tournamentRepository.findUpcomingTourmnametns();
     }
 
     public List<Tournament> getHotTournaments() {
@@ -30,7 +32,12 @@ public class TournamentDomainService {
     }
 
     public Optional<Tournament> findById(UUID id) {
-        return tournamentRepository.findById(id);
+        Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
+
+        return tournamentOptional.map(tournament -> {
+            tournament.getEntries().sort(Comparator.comparingInt(TournamentEntry::getPoints).reversed());
+            return tournament;
+        });
     }
 
     public void save(Tournament entity) {

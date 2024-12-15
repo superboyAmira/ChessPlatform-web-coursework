@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${base.title}">Edit Game</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <h1 th:text="${base.title}">Edit Game</h1>
+    <p th:text="'Logged in as: ' + ${base.currentUser}"></p>
+    <a th:href="@{/players}">See possible players UUIDs</a>
+</header>
+
+<main>
+    <form th:action="@{'/games/create'}" th:method="post" th:object="${game}" enctype="multipart/form-data">
+        <div>
+            <label for="player2">Player 2 UUID:</label>
+            <input type="text" id="player2" name="player2Id" th:field="*{player2Id}" required>
+        </div>
+        <div>
+            <label for="result">Result:</label>
+            <input type="text" id="result" name="result" th:field="*{result}" required>
+        </div>
+        <div>
+            <label for="startTime">Start Time:</label>
+            <input type="datetime-local" id="startTime" name="startTime" th:field="*{startTime}" required>
+        </div>
+        <div>
+            <label for="gameType">Game Type:</label>
+            <select id="gameType" name="gameType" th:field="*{gameType}">
+                <option value="BLITZ" th:selected="*{gameType == 'BLITZ'}">Blitz</option>
+                <option value="RAPID" th:selected="*{gameType == 'RAPID'}">Rapid</option>
+                <option value="BULLET" th:selected="*{gameType == 'BULLET'}">Bullet</option>
+            </select>
+        </div>
+        <div>
+            <label for="duration">Duration:</label>
+            <input type="number" id="duration" name="duration" th:field="*{duration}" required>
+        </div>
+        <div>
+            <label for="movesFile">Upload Moves File:</label>
+            <input type="file" id="movesFile" name="movesFile" accept=".txt">
+        </div>
+        <div>
+            <h2 th::text="${error}"></h2>
+        </div>
+
+        <div>
+            <button type="submit">Save</button>
+            <a href="/games">Cancel</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

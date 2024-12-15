@@ -1,11 +1,9 @@
 package ru.chessplatform.domain.model.entity;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "game")
@@ -16,6 +14,9 @@ public class Game extends BaseEntity {
     private String gameType; //Блиц Раптд Пуля
     private LocalDateTime startTime;
     private long duration;
+    private List<Move> moves = new ArrayList<>();
+
+
 
     public Game() {}
 
@@ -26,6 +27,11 @@ public class Game extends BaseEntity {
         this.gameType = gameType;
         this.startTime = startTime;
         this.duration = duration;
+    }
+
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Move> getMoves() {
+        return moves;
     }
 
     @ManyToOne
@@ -58,6 +64,10 @@ public class Game extends BaseEntity {
     @Column(name = "duration")
     public long getDuration() {
         return duration;
+    }
+
+    public void setMoves(List<Move> moves) {
+        this.moves = moves;
     }
 
     public void setPlayer1(Player player1) {
