@@ -1,4 +1,8 @@
 package ru.chessplatform.domain.model.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "game")
-public class Game extends BaseEntity {
+public class Game extends BaseEntity implements Serializable {
     private Player player1;
     private Player player2;
     private String result; // Победа игрока 1 Победа игрока 2 Ничья
@@ -30,6 +34,7 @@ public class Game extends BaseEntity {
     }
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     public List<Move> getMoves() {
         return moves;
     }

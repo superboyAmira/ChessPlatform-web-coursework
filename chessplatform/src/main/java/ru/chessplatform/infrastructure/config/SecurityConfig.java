@@ -1,4 +1,4 @@
-package ru.chessplatform.util;
+package ru.chessplatform.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,9 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/**/admin/**", "/player/**").hasRole("ADMIN") // Доступ для администраторов
-                .antMatchers("/player/**").hasRole("PLAYER") // Доступ для игроков
-                .antMatchers("/auth/**", "/", "/css/**", "/js/**", "/images/**").permitAll() // Общедоступные маршруты
+                .antMatchers("/**/admin/**", "/player/**").hasRole("ADMIN")
+                .antMatchers("/player/**").hasRole("PLAYER")
+                .antMatchers("/auth/**", "/", "/css/**", "/js/**", "/images/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

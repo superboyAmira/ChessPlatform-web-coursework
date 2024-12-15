@@ -3,6 +3,7 @@ package ru.chessplatform.domain.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import ru.chessplatform.domain.model.entity.Game;
 import ru.chessplatform.domain.repository.GameRepository;
@@ -15,16 +16,8 @@ public class GameDomainService {
         this.gameRepository = gameRepository;
     }
 
-    public List<Game> getRecentCompletedGamesByGM() {
-        return gameRepository.findGMGames();
-    }
-
     public List<Game> getGamesByPlayerId(UUID playerId, int size, int page) {
         return gameRepository.findByPlayerId(playerId, size, page);
-    }
-
-    public Long getTotalGamesPlayed() {
-        return gameRepository.getCountAllGames();
     }
 
     public List<Game> findAll(int limit, int offset) {
@@ -40,6 +33,6 @@ public class GameDomainService {
     }
 
     public long count() {
-        return gameRepository.getAmount();
+        return gameRepository.getCountAllGames();
     }
 }

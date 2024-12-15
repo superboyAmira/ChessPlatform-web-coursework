@@ -6,7 +6,6 @@ import ru.chessplatform.domain.model.valueobject.RoleEnum;
 import ru.chessplatform.domain.repository.PlayerRepository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -30,14 +29,9 @@ public class AuthService {
         playerRepository.save(player);
     }
 
-    public Optional<Player> getUserById(UUID id) {
-        return playerRepository.findById(id);
-    }
-
     public Optional<Player> getUserByEmail(String email) {
         return playerRepository.findByEmail(email);
     }
-
     public boolean userExists(String email) {
         return playerRepository.existsByEmail(email);
     }

@@ -1,13 +1,12 @@
 package ru.chessplatform.ui.controller;
 
 import com.example.controllers.MainController;
-import com.example.input.PlayerInputModel;
 import com.example.viewmodel.*;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import ru.chessplatform.application.service.CustomService;
 import ru.chessplatform.domain.model.entity.Player;
 import ru.chessplatform.domain.service.GameDomainService;
 import ru.chessplatform.domain.service.PlayerDomainService;
@@ -16,28 +15,24 @@ import ru.chessplatform.domain.service.mapper.TournamentMapper;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Controller
 public class MainPageController implements MainController {
-    private final GameDomainService gameService;
     private final PlayerDomainService playerService;
-    private final TournamentDomainService tournamentService;
+    private final CustomService customService;
 
-    public MainPageController(GameDomainService gameService, PlayerDomainService playerService, TournamentDomainService tournamentService) {
-        this.gameService = gameService;
+    public MainPageController(CustomService customService, PlayerDomainService playerService) {
         this.playerService = playerService;
-        this.tournamentService = tournamentService;
+        this.customService = customService;
     }
 
     @Override
     public String showHomePage(Model model) {
         BaseViewModel base = createBaseViewModel("Main Page");
 
-        // Добавляем объект base в модель
         model.addAttribute("base", base);
-        long activePlayersCount = playerService.getActivePlayersCount();
-        long totalGamesPlayed = gameService.getTotalGamesPlayed();
+        long activePlayersCount = playerService.count();
+        long totalGamesPlayed = customService.getTotalGamesPlayed();
 
         Optional<Player> id = playerService.getPlayerByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if (id.isEmpty()) {
@@ -47,12 +42,12 @@ public class MainPageController implements MainController {
         }
 
 
-        List<TournamentViewModel> upcomingTournaments = tournamentService.getUpcomingTournaments()
+        List<TournamentViewModel> upcomingTournaments = customService.getUpcomingTournaments()
                 .stream()
                 .map(tournament -> TournamentMapper.toViewModel(tournament))
                 .toList();
 
-        List<PlayerViewModel> topPlayers = playerService.getTopPlayersByRating()
+        List<PlayerViewModel> topPlayers = customService.getTopPlayersByRating()
                 .stream()
                 .map(player -> new PlayerViewModel(
                         player.getId(),
@@ -61,7 +56,7 @@ public class MainPageController implements MainController {
                         player.getChessGrade()
                 )).toList();
 
-        List<GameViewModel> recentGrandmasterGames = gameService.getRecentCompletedGamesByGM()
+        List<GameViewModel> recentGrandmasterGames = customService.getRecentCompletedGamesByGM()
                 .stream()
                 .map(game -> new GameViewModel(
                         game.getId(),

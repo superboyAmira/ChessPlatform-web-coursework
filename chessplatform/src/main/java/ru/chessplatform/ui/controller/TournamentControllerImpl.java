@@ -46,20 +46,7 @@ public class TournamentControllerImpl implements TournamentController {
                                   Model model) {
         BaseViewModel baseViewModel = createBaseViewModel("Tournament List");
 
-        // Получение турниров с пагинацией
-        List<TournamentViewModel> tournaments = tournamentService.findAll(size, page)
-                .stream()
-                .map(t -> new TournamentViewModel(
-                        t.getId(),
-                        t.getName(),
-                        t.getStartDate(),
-                        t.getParticipantCount(),
-                        t.getTournamentType(),
-                        t.getPrizePool(),
-                        t.getStatus(),
-                        null)
-                )
-                .toList();
+        List<TournamentViewModel> tournaments = tournamentService.findAll(size, page);
 
         long totalTournaments = tournamentService.count();
 

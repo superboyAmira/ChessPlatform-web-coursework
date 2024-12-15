@@ -1,5 +1,6 @@
 package ru.chessplatform.domain.model.aggregate;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +12,12 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ru.chessplatform.domain.model.entity.BaseEntity;
 
 @Entity
 @Table(name = "tournament")
-public class Tournament extends BaseEntity {
+public class Tournament extends BaseEntity implements Serializable {
     private String name;
     private LocalDateTime startDate;
     private int participantCount;
@@ -61,6 +63,7 @@ public class Tournament extends BaseEntity {
     }
 
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     public List<TournamentEntry> getEntries() {
         return entries;
     }

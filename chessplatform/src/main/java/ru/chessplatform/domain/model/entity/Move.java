@@ -1,5 +1,6 @@
 package ru.chessplatform.domain.model.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.AttributeOverride;
@@ -11,11 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.chessplatform.domain.model.valueobject.Figure;
 
 @Entity
 @Table(name = "move")
-public class Move extends BaseEntity {
+public class Move extends BaseEntity implements Serializable {
 
     private Game game;
     private Player player;
@@ -45,6 +48,7 @@ public class Move extends BaseEntity {
     // Геттеры
     @ManyToOne
     @JoinColumn(name = "game_id", nullable = false)
+    @JsonBackReference
     public Game getGame() {
         return game;
     }

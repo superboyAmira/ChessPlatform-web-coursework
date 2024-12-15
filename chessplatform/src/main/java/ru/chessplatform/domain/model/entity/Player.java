@@ -4,6 +4,7 @@ import ru.chessplatform.application.dto.TopTournamentPlayer;
 import ru.chessplatform.domain.model.valueobject.RoleEnum;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 
@@ -21,7 +22,7 @@ import java.util.UUID;
         )
 )
 @Table(name = "player")
-public class Player extends BaseEntity {
+public class Player extends BaseEntity implements Serializable {
     private String name;
     private String email;
     private int rating;

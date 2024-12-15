@@ -6,12 +6,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import ru.chessplatform.domain.model.entity.BaseEntity;
 import ru.chessplatform.domain.model.entity.Player;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "tournament_entry")
-public class TournamentEntry extends BaseEntity {
+public class TournamentEntry extends BaseEntity implements Serializable {
     private Tournament tournament;
     private Player player;
     private int points;
@@ -35,12 +38,14 @@ public class TournamentEntry extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "tournament_id", nullable = false)
+    @JsonBackReference
     public Tournament getTournament() {
         return tournament;
     }
 
     @ManyToOne
     @JoinColumn(name = "player_id", nullable = false)
+    @JsonBackReference
     public Player getPlayer() {
         return player;
     }

@@ -30,16 +30,9 @@ public class PlayerControllerImpl implements PlayerController {
     public String listPlayers(int page, int size, Model model) {
         BaseViewModel baseViewModel = createBaseViewModel("Players List");
 
-        List<PlayerViewModel> playerViewModelList = playerDomainService.findAll(size, page)
-                .stream()
-                .map(value -> new PlayerViewModel(
-                        value.getId(),
-                        value.getName(),
-                        value.getRating(),
-                        value.getChessGrade()
-                )).toList();
+        List<PlayerViewModel> playerViewModelList = playerDomainService.findAll(size, page);
 
-        long totalPlayers = playerDomainService.getActivePlayersCount();
+        long totalPlayers = playerDomainService.count();
 
         int totalPages = (int) Math.ceil((double) totalPlayers / size);
 

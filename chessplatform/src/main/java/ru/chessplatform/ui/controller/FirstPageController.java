@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import ru.chessplatform.application.service.CustomService;
 import ru.chessplatform.domain.service.PlayerDomainService;
 import ru.chessplatform.domain.service.TournamentDomainService;
 
@@ -15,18 +15,16 @@ import java.util.List;
 
 @Controller
 public class FirstPageController implements PageFirstController {
-    TournamentDomainService tournamentDomainService;
-    PlayerDomainService playerDomainService;
+    CustomService customService;
 
-    public FirstPageController(TournamentDomainService tournamentDomainService, PlayerDomainService playerDomainService) {
-        this.tournamentDomainService = tournamentDomainService;
-        this.playerDomainService = playerDomainService;
+    public FirstPageController(CustomService customService) {
+        this.customService = customService;
     }
 
     @Override
     @GetMapping
     public String showFirstPage(Model model) {
-        List<TournamentViewModel> topPrizeTournaments = tournamentDomainService.getHotTournaments()
+        List<TournamentViewModel> topPrizeTournaments = customService.getHotTournaments()
                 .stream()
                 .map(tournament -> new TournamentViewModel(
                         tournament.getId(),
@@ -45,7 +43,7 @@ public class FirstPageController implements PageFirstController {
                 ))
                 .toList();
 
-        List<TopTournamentPlayerViewModel> topPlayers = this.playerDomainService.getTopTournamentPlayers()
+        List<TopTournamentPlayerViewModel> topPlayers = this.customService.getTopTournamentPlayers()
                 .stream()
                 .map(player -> new TopTournamentPlayerViewModel(
                         player.getId(),

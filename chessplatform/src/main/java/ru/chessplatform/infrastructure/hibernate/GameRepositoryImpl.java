@@ -47,15 +47,4 @@ public class GameRepositoryImpl extends GeneralRepository<Game> implements GameR
                 .getSingleResult();
         return ((Number) result).longValue();
     }
-
-    @Override
-    public Long getAmount() {
-        String query = """
-        SELECT COUNT(g) FROM Game g
-    """;
-        Object result = this.getEntityManager()
-                .createQuery(query)
-                .getSingleResult();
-        return ((Number) result).longValue();
-    }
 }
