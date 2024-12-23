@@ -1,5 +1,7 @@
 package ru.chessplatform.ui.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +14,8 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/auth")
 public class AuthControllerImpl {
+
+    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     private final AuthService authService;
 
@@ -26,13 +30,15 @@ public class AuthControllerImpl {
 
     @GetMapping("/register")
     public String registerPage(Model model) {
+        LOG.info("User are registered: {}", model);
         model.addAttribute("player", new Player());
-        return "auth/register"; // Шаблон страницы регистрации
+        return "auth/register";
     }
 
     @PostMapping("/register")
     public String registerPlayer(@ModelAttribute @Valid Player player, BindingResult result, Model model) {
         if (result.hasErrors()) {
+            LOG.info("player has incorrect fields: {}", player);
             return "auth/register";
         }
 
@@ -43,6 +49,7 @@ public class AuthControllerImpl {
             return "auth/register";
         }
 
+        LOG.info("player has registered: {}", player);
         return "redirect:/auth/login";
     }
 }

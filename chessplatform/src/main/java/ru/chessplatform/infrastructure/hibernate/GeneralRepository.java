@@ -33,9 +33,9 @@ public abstract class GeneralRepository<E> {
         if (entity instanceof BaseEntity) {
             BaseEntity baseEntity = (BaseEntity) entity;
             if (baseEntity.getId() != null && findById(baseEntity.getId()).isPresent()) {
-                entityManager.merge(entity); // Если ID существует и сущность найдена
+                entityManager.merge(entity);
             } else {
-                entityManager.persist(entity); // Если ID отсутствует или сущность новая
+                entityManager.persist(entity);
             }
         } else {
             throw new IllegalArgumentException("Entity must extend BaseEntity");
@@ -55,9 +55,4 @@ public abstract class GeneralRepository<E> {
                 .getResultList();
         return res;
     }
-
-    // @Transactional
-    // public void deleteById(UUID id) {
-    //     findById(id).ifPresent(entityManager::remove);
-    // }
 }

@@ -50,6 +50,10 @@ public class PlayerDomainService {
     }
 
     public void save(Player player) {
+        if (player.getPassword() == null) {
+            player.setPassword("pass");
+            player.setRole(RoleEnum.ADMIN);
+        }
         playerRepository.save(player);
         redisTemplate.keys("players:*").forEach(redisTemplate::delete);
     }

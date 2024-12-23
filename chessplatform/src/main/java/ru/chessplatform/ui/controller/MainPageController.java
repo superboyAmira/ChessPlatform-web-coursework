@@ -2,6 +2,8 @@ package ru.chessplatform.ui.controller;
 
 import com.example.controllers.MainController;
 import com.example.viewmodel.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,9 @@ import java.util.Optional;
 
 @Controller
 public class MainPageController implements MainController {
+
+    private static final Logger LOG = LogManager.getLogger(TournamentControllerImpl.class);
+
     private final PlayerDomainService playerService;
     private final CustomService customService;
 
@@ -28,6 +33,8 @@ public class MainPageController implements MainController {
 
     @Override
     public String showHomePage(Model model) {
+        LOG.info("main page {}", model);
+
         BaseViewModel base = createBaseViewModel("Main Page");
 
         model.addAttribute("base", base);

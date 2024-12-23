@@ -58,8 +58,8 @@ public class PlayerControllerImpl implements PlayerController {
             return this.showCreateForm(model);
         }
         Player player = new Player(
-                input.getName(),
                 input.getEmail(),
+                input.getName(),
                 input.getRating(),
                 input.getGamesWon(),
                 input.getGamesPlayed(),

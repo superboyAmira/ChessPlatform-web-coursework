@@ -32,7 +32,6 @@ public class FakerRunner {
         return args -> {
             Faker faker = new Faker();
 
-            // Генерация турниров
             List<Tournament> tournaments = new ArrayList<>();
             IntStream.range(0, 10).forEach(i -> {
                 Tournament tournament = new Tournament(
@@ -46,7 +45,6 @@ public class FakerRunner {
                 tournamentRepository.save(tournament);
             });
             List<Player> players = new ArrayList<>();
-            // Создаем администратора
             /*Player admin = new Player(
                     "admin",
                     "admin@example.com",
@@ -60,7 +58,6 @@ public class FakerRunner {
             players.add(admin);
             playerRepository.save(admin);
 
-            // Создаем пользователя
             Player user = new Player(
                     "user",
                     "user@example.com",
@@ -74,7 +71,6 @@ public class FakerRunner {
             players.add(user);
             playerRepository.save(user);*/
 
-            // Генерация случайных игроков
             IntStream.range(0, 18).forEach(i -> {
                 Player randomPlayer = new Player(
                         faker.name().fullName(),
@@ -90,10 +86,8 @@ public class FakerRunner {
                 playerRepository.save(randomPlayer);
             });
 
-            // Генерация фигур
             String[] figureTypes = {"PAWN", "KNIGHT", "BISHOP", "ROOK", "QUEEN", "KING"};
 
-            // Генерация записей в турниры
             tournaments.forEach(tournament -> {
                 players.stream()
                         .limit(faker.number().numberBetween(5, tournament.getParticipantCount()))
@@ -109,7 +103,6 @@ public class FakerRunner {
             });
 
             List<Game> games = new ArrayList<>();
-            // Генерация игр
             IntStream.range(0, 50)
                     .forEach(i -> {
                         Player player1 = faker.options().nextElement(players);
@@ -127,8 +120,6 @@ public class FakerRunner {
                         );
                          gameRepository.save(game);
                     });
-
-            // Генерация ходов
             games.forEach(game -> {
                 IntStream.range(0, faker.number().numberBetween(10, 100)).forEach(moveNumber -> {
                     Player player = (moveNumber % 2 == 0) ? game.getPlayer1() : game.getPlayer2();

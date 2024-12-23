@@ -2,6 +2,8 @@ package ru.chessplatform.ui.controller;
 
 import com.example.controllers.PageFirstController;
 import com.example.viewmodel.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,8 @@ import java.util.List;
 @Controller
 public class FirstPageController implements PageFirstController {
     CustomService customService;
+    private static final Logger LOG = LogManager.getLogger(Controller.class);
+
 
     public FirstPageController(CustomService customService) {
         this.customService = customService;
@@ -24,6 +28,7 @@ public class FirstPageController implements PageFirstController {
     @Override
     @GetMapping
     public String showFirstPage(Model model) {
+        LOG.info("Page 1 viewed: {}", model);
         List<TournamentViewModel> topPrizeTournaments = customService.getHotTournaments()
                 .stream()
                 .map(tournament -> new TournamentViewModel(

@@ -3,6 +3,8 @@ package ru.chessplatform.ui.controller;
 import com.example.controllers.GameController;
 import com.example.input.GameInputModel;
 import com.example.viewmodel.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,8 @@ import java.util.*;
 public class GameControllerImpl implements GameController {
     private final GameDomainService gameDomainService;
     private final PlayerDomainService playerDomainService;
+    private static final Logger LOG = LogManager.getLogger(Controller.class);
+
 
     public GameControllerImpl(GameDomainService gameDomainService, PlayerDomainService playerDomainService) {
         this.gameDomainService = gameDomainService;
@@ -35,6 +39,7 @@ public class GameControllerImpl implements GameController {
 
     @Override
     public String listGames(int page, int size, Model model) {
+        LOG.info("list of games viewed: {}", model);
         BaseViewModel baseViewModel = createBaseViewModel("Games List");
         List<GameViewModel> games = gameDomainService.findAll(size, page).stream().map(g -> new GameViewModel(
                 g.getId(),
@@ -60,6 +65,7 @@ public class GameControllerImpl implements GameController {
 
     @Override
     public String listMyGames(int page, int size, Model model) {
+        LOG.info("list of games bu concrete user: {}", SecurityContextHolder.getContext().getAuthentication().getName());
         BaseViewModel baseViewModel = createBaseViewModel("My Games List");
         model.addAttribute("base", baseViewModel);
 
@@ -68,6 +74,7 @@ public class GameControllerImpl implements GameController {
 
         if (currentUser.isEmpty()) {
             model.addAttribute("error", "Current user not found");
+            LOG.error("Current user not found: {}", SecurityContextHolder.getContext().getAuthentication().getName());
             return "error";
         }
 
@@ -100,27 +107,28 @@ public class GameControllerImpl implements GameController {
     @Override
     public String createGame(GameInputModel input, MultipartFile movesFile, BindingResult result, Model model) {
         if (result.hasErrors()) {
+            LOG.error("Some errors in template: {}", SecurityContextHolder.getContext().getAuthentication().getName(), result.getAllErrors());
             return this.showCreateForm(model);
         }
 
-        // Получение текущего пользователя
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Player> currentUser = playerDomainService.getPlayerByEmail(currentUsername);
 
         if (currentUser.isEmpty()) {
             model.addAttribute("error", "Current user not found");
+            LOG.error("Current user not found: {}", SecurityContextHolder.getContext().getAuthentication().getName());
             return this.showCreateForm(model);
         }
 
         Optional<Player> pl2 = playerDomainService.getPlayerById(input.getPlayer2Id());
         if (pl2.isEmpty()) {
             model.addAttribute("error", "Player 2 not found");
+            LOG.error("Current user not found: {}", SecurityContextHolder.getContext().getAuthentication().getName());
             return this.showCreateForm(model);
         }
 
-        // Создание игры
         Game game = new Game(
-                currentUser.get(), // Первый игрок — текущий пользователь
+                currentUser.get(), // Первый игрок = текущий пользователь
                 pl2.get(),
                 input.getResult(),
                 input.getGameType(),
@@ -130,8 +138,9 @@ public class GameControllerImpl implements GameController {
         if (!movesFile.isEmpty()) {
             try {
                 List<Move> moves = parseMovesFromFile(game, movesFile);
-                game.setMoves(moves); // Свяжем ходы с игрой
+                game.setMoves(moves);
             } catch (Exception e) {
+                LOG.error("Error while game parsed: {}", SecurityContextHolder.getContext().getAuthentication().getName(), e.getMessage());
                 model.addAttribute("error", "Error processing moves file: " + e.getMessage());
                 return this.showCreateForm(model);
             }
@@ -146,6 +155,7 @@ public class GameControllerImpl implements GameController {
         List<Move> moves = new ArrayList<>();
         List<String> lines = Files.readAllLines(Paths.get(file.getOriginalFilename()));
 
+        LOG.info("Start parsing moves: {}", SecurityContextHolder.getContext().getAuthentication().getName());
         for (String line : lines) {
             if (line.startsWith("#") || line.isBlank()) {
                 continue;
@@ -219,14 +229,17 @@ public class GameControllerImpl implements GameController {
     @Override
     public String editGame(UUID id, GameInputModel input, BindingResult result, Model model) {
         if (result.hasErrors()) {
+            LOG.error("result has errors: {}", SecurityContextHolder.getContext().getAuthentication().getName());
             return this.showEditForm(id, model);
         }
         Optional<Player> pl1 = playerDomainService.getPlayerById(input.getPlayer1Id());
         if (pl1.isEmpty()) {
+            LOG.error("Current user not found: {}", SecurityContextHolder.getContext().getAuthentication().getName());
             return this.showCreateForm(model);
         }
         Optional<Player> pl2 = playerDomainService.getPlayerById(input.getPlayer2Id());
         if (pl2.isEmpty()) {
+            LOG.error("Current user not found: {}", SecurityContextHolder.getContext().getAuthentication().getName());
             return this.showCreateForm(model);
         }
         Game game = new Game(
@@ -244,6 +257,7 @@ public class GameControllerImpl implements GameController {
     public String viewGameDetails(UUID gameId, Model model) {
         Optional<Game> gameOptional = gameDomainService.findById(gameId);
         if (gameOptional.isEmpty()) {
+            LOG.error("game not found: {}", SecurityContextHolder.getContext().getAuthentication().getName());
             model.addAttribute("error", "Game not found");
             return "error";
         }
